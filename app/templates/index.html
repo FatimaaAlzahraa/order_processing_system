@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head><title>Store</title></head>
+<body>
+  <h1>Our Products</h1>
+  <ul>
+    {% for product in products %}
+      <li>
+        <a href="/product/{{ product.id }}">{{ product.name }} - ${{ product.price }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

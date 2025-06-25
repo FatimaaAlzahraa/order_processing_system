@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
+from flask import render_template, current_app
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from . import db
 import os
+from flask import session, redirect, url_for
 from dotenv import load_dotenv
 from .models import Product, Order, User
 import smtplib
@@ -9,6 +11,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from email.utils import formataddr
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 load_dotenv()
 main = Blueprint('main', __name__)
 
@@ -46,30 +51,51 @@ def login():
 @jwt_required()
 def create_order():
     user_id = get_jwt_identity()
-    data = request.json
-    product = Product.query.get(data["product_id"])
+    data = request.get_json()
 
-    if not product or product.stock < data["quantity"]:
+    # Validate input
+    product_name = data.get("product_name")
+    quantity = data.get("quantity")
+    email = data.get("email")
+
+    if not all([product_name, quantity, email]):
+        return jsonify({"error": "Missing data (product_name, quantity, or email)"}), 400
+
+    product = Product.query.filter_by(name=product_name).first()
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+
+    if quantity > product.stock:
         return jsonify({"error": "Insufficient stock"}), 400
 
-    total = product.price * data["quantity"]
-    order = Order(
-        product_id=product.id,
-        user_id=user_id,
-        quantity=data["quantity"],
-        total=total,
-        paid=True,
-        customer_email=data["email"]
-    )
-    db.session.add(order)
-    product.stock -= data["quantity"]
-    db.session.commit()
+    total = product.price * quantity
 
-    response = send_confirmation_email(order, product)
-    if response:
-        return response
+    try:
+        order = Order(
+            product_id=product.id,
+            user_id=user_id,
+            quantity=quantity,
+            total=total,
+            paid=True,
+            customer_email=email
+        )
 
-    return jsonify({"message": "Order placed successfully", "order_id": order.id})
+        db.session.add(order)
+        product.stock -= quantity
+        db.session.commit()
+
+        email_result = send_confirmation_email(order, product)
+        if isinstance(email_result, tuple):  # معناها إنه Error response من jsonify
+            return email_result
+
+        return jsonify({
+            "message": "Order placed successfully",
+            "order_id": order.id
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Order failed", "details": str(e)}), 500
 
 # 4- send confirm email for the authorized user
 def send_confirmation_email(order, product):
@@ -77,37 +103,128 @@ def send_confirmation_email(order, product):
     sender_password = os.getenv("SENDER_PASSWORD")
     receiver_email = order.customer_email
 
-    # check the presences of email  data 
     if not sender_email or not sender_password:
         return jsonify({"error": "Email credentials are missing"}), 500
 
-    #Words in email 
     subject = f"Order Confirmation - Order #{order.id}"
 
-    html = f"""
-    <html>
-        <body>
-            <h2>Thank you for your order!</h2>
-            <p>Order ID: #{order.id}</p>
-            <p>{order.quantity} &times; {product.name} = ${order.total}</p>
-        </body>
-    </html>
-    """
-
-    #Setup email
-    message = MIMEMultipart()
-    message["From"] = formataddr((str(Header("Order Service", "utf-8")), sender_email))
-    message["To"] = receiver_email
-    message["Subject"] = Header(subject, "utf-8")
-    message.attach(MIMEText(html, "html", "utf-8"))
-
-    #Send email
     try:
+
+        with current_app.app_context():
+            html = render_template('confirmation_email.html', order=order, product=product)
+
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = receiver_email
+        message["Subject"] = str(Header(subject, "utf-8"))
+        message.attach(MIMEText(html, "html"))
+
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, receiver_email, message.as_string())
-            print("Email sent successfully!")
+
+        logging.info("Email sent successfully")
+        return None
+
     except Exception as e:
-        print(f" Email sending failed: {e}")
+        logging.error(f" Email sending failed: {e}")
         return jsonify({"error": "Email failed", "details": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------
+
+# simple app with html and flask 
+@main.route('/')
+def landing():
+    return render_template('landing.html')
+
+@main.route('/registers', methods=['GET', 'POST'])
+def register_page():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        if User.query.filter_by(username=username).first():
+            return render_template('register.html', error="Username already exists")
+
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+
+        session['user_id'] = user.id  # 
+        return redirect(url_for('main.home'))  
+
+    return render_template('register.html')
+
+
+@main.route('/logins', methods=['GET', 'POST'])
+def login_page():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+            session['user_id'] = user.id
+            return redirect(url_for('main.home'))  # بعد تسجيل الدخول نرجع للهوم
+        else:
+            return render_template('login.html', error="Invalid credentials")
+    return render_template('login.html')
+
+@main.route('/product')
+def home():
+    products = Product.query.all()
+    return render_template('index.html', products=products)
+
+@main.route('/product/<int:product_id>')
+def product_detail(product_id):
+    product = Product.query.get_or_404(product_id)
+    return render_template('product.html', product=product)
+
+@main.route('/place-order', methods=['POST'])
+def place_order():
+    # ✅ تأكد أن المستخدم سجل الدخول
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('main.login_page'))
+
+    product_id = request.form['product_id']
+    quantity = int(request.form['quantity'])
+    email = request.form['email']
+
+    product = Product.query.get(product_id)
+    if not product or product.stock < quantity:
+        return "Insufficient stock", 400
+
+    order = Order(
+        product_id=product.id,
+        user_id=user_id,
+        quantity=quantity,
+        total=product.price * quantity,
+        paid=True,
+        customer_email=email
+    )
+
+    db.session.add(order)
+    product.stock -= quantity
+    db.session.commit()
+
+    send_confirmation_email(order, product)
+    return render_template('success.html', order=order)
+
+
+@main.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('main.login_page'))

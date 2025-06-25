@@ -4,6 +4,7 @@ from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import os
+from .error_handlers import register_error_handlers
 
 db = SQLAlchemy()
 mail = Mail()
@@ -20,6 +21,7 @@ def create_app():
 
     db.init_app(app)
     mail.init_app(app)
+    register_error_handlers(app)
     jwt.init_app(app)
 
     from .routes import main

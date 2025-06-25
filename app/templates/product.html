@@ -1,0 +1,10 @@
+<h2>{{ product.name }}</h2>
+<p>Price: ${{ product.price }}</p>
+<p>Available: {{ product.stock }}</p>
+
+<form action="/place-order" method="POST">
+  <input type="hidden" name="product_id" value="{{ product.id }}">
+  Quantity: <input type="number" name="quantity" required><br>
+  Your Email: <input type="email" name="email" required><br>
+  <button type="submit">Place Order</button>
+</form>
