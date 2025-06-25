@@ -54,6 +54,8 @@ SENDER_PASSWORD=your_app_password </pre>
 
 ## 🐳 Docker
 ### Build Docker Image
-<pre> docker build -t order-app .
+<pre> <https://hub.docker.com/r/fatmaalzahra/hey-app-flask>
+docker build -t order-app .
 ### Run Docker Container
-docker run -p 5000:5000 order-app </pre>
+docker run -p 5000:5000 order-app 
+</pre>
