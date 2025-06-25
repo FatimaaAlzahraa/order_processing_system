@@ -85,7 +85,7 @@ def create_order():
         db.session.commit()
 
         email_result = send_confirmation_email(order, product)
-        if isinstance(email_result, tuple):  # معناها إنه Error response من jsonify
+        if isinstance(email_result, tuple): 
             return email_result
 
         return jsonify({
@@ -99,32 +99,40 @@ def create_order():
 
 # 4- send confirm email for the authorized user
 def send_confirmation_email(order, product):
-    import smtplib
-    import os
-    from email.mime.text import MIMEText
-    from dotenv import load_dotenv
+    sender_email = os.getenv("SENDER_EMAIL")
+    sender_password = os.getenv("SENDER_PASSWORD")
+    receiver_email = order.customer_email
 
-    load_dotenv()
+    if not sender_email or not sender_password:
+        return jsonify({"error": "Email credentials are missing"}), 500
 
-    sender = os.getenv("SENDER_EMAIL")
-    password = os.getenv("SENDER_PASSWORD")
-    receiver = sender  # Send to self for test
-
-    msg = MIMEText("This is a simple test email from Python.")
-    msg["Subject"] = "Test Email"
-    msg["From"] = sender
-    msg["To"] = receiver
+    subject = f"Order Confirmation - Order #{order.id}"
 
     try:
+        with current_app.app_context():
+            html = render_template('confirmation_email.html', order=order, product=product)
+
+        message = MIMEMultipart()
+        message["From"] = formataddr(("Order Service", sender_email))  
+        message["To"] = formataddr(("Customer", receiver_email))       
+        message["Subject"] = subject                               
+
+        message.attach(MIMEText(html, "html"))
+
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
-            server.login(sender, password)
-            server.sendmail(sender, receiver, msg.as_string())
-            print("✅ Email sent successfully!")
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, message.as_string())
+
+        logging.info("Email sent successfully")
+        return None
+
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        logging.error(f"Email sending failed: {e}")
         return jsonify({"error": "Email failed", "details": str(e)}), 500
 
+
+        
 
 
 
