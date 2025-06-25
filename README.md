@@ -12,25 +12,21 @@ A simplified backend system for handling customer orders using Flask. Supports u
 - 🧾 Logging support
 - 🐳 Docker-ready
 
-## 📁 Project Structure
-<pre> ```
-app/
-├── routes.py
-├── models.py
-├── templates/
-│   └── confirmation_email.html
-tests/
-├── test_auth.py
-├── test_order.py
-.env
-config.py
-requirements.txt
-run.py
-Dockerfile
-``` </pre>
+
+
+## 🧰 Technologies
+
+- Python + Flask
+- Flask-JWT-Extended
+- Flask-Mail
+- SQLAlchemy
+- SQLite (for local testing)
+- Docker
+- Unittest + Mock
+
+---
 
 ## ⚙️ Setup
-
 <pre> ``` bash
 git clone <https://github.com/FatimaaAlzahraa/order_processing_system>
 cd order_process_sys
@@ -50,13 +46,30 @@ MAIL_PASSWORD=your_app_password
 SENDER_EMAIL=your_email@gmail.com 
 SENDER_PASSWORD=your_app_password ``` </pre>
 
+### Create Virtual Environment
+<pre> ```
+python -m venv venv
+venv\Scripts\activate
+``` </pre>
+
+### 3. Install Dependencies
+<pre> ```
+pip install -r requirements.txt ``` </pre>
 
 
 ## ▶️ Run App
 
-<pre> ``bash
+<pre> ```
 flask run
 ``` </pre>
 
 
-
+## 🐳 Docker
+### Build Docker Image
+<pre> ```
+docker build -t order-app .
+```
+### Run Docker Container
+```bash
+docker run -p 5000:5000 order-app
+ ``` </pre>

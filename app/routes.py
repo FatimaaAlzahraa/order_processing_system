@@ -76,6 +76,7 @@ def create_order():
             user_id=user_id,
             quantity=quantity,
             total=total,
+            #Payment Processing (Mock)
             paid=True,
             customer_email=email
         )
