@@ -27,7 +27,7 @@ A simplified backend system for handling customer orders using Flask. Supports u
 ---
 
 ## ⚙️ Setup and Create Virtual Environment
-<pre> git clone https://github.com/FatimaaAlzahraa/order_processing_system
+<pre> [🔷 Clone the repository](https://github.com/FatimaaAlzahraa/order_processing_system)
 create .env file 
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
