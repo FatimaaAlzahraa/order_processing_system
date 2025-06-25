@@ -26,17 +26,19 @@ A simplified backend system for handling customer orders using Flask. Supports u
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Setup and Create Virtual Environment
 <pre> ``` bash
 git clone <https://github.com/FatimaaAlzahraa/order_processing_system>
-cd order_process_sys
+create .env file 
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt  ``` </pre> 
+pip install -r requirements.txt  
+testing API in postman 
+``` </pre> 
 
 ## 🔐 Environment (.env)
 
-<pre> ``` SECRET_KEY=your_secret_key 
+<pre> SECRET_KEY=your_secret_key 
 SQLALCHEMY_DATABASE_URI=sqlite:///database.db 
 MAIL_SERVER=smtp.gmail.com 
 MAIL_PORT=587 
@@ -44,13 +46,8 @@ MAIL_USE_TLS=True
 MAIL_USERNAME=your_email@gmail.com 
 MAIL_PASSWORD=your_app_password 
 SENDER_EMAIL=your_email@gmail.com 
-SENDER_PASSWORD=your_app_password ``` </pre>
+SENDER_PASSWORD=your_app_password </pre>
 
-### Create Virtual Environment
-<pre> ```
-python -m venv venv
-venv\Scripts\activate
-``` </pre>
 
 ### 3. Install Dependencies
 <pre> ```
@@ -60,16 +57,14 @@ pip install -r requirements.txt ``` </pre>
 ## ▶️ Run App
 
 <pre> ```
-flask run
-``` </pre>
+flask run ``` </pre>
 
 
 ## 🐳 Docker
 ### Build Docker Image
 <pre> ```
 docker build -t order-app .
-```
+
 ### Run Docker Container
-```bash
-docker run -p 5000:5000 order-app
- ``` </pre>
+
+docker run -p 5000:5000 order-app ``` </pre>
