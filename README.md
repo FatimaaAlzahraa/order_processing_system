@@ -68,4 +68,4 @@ docker build -t fatmaalzahra/hey-app-flask .
 
 \`\`\`bash
 docker run -p 5000:5000 fatmaalzahra/hey-app-flask
-\`\`\`" >> README.md
+\`\`\`" 
