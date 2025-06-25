@@ -99,37 +99,32 @@ def create_order():
 
 # 4- send confirm email for the authorized user
 def send_confirmation_email(order, product):
-    sender_email = os.getenv("SENDER_EMAIL")
-    sender_password = os.getenv("SENDER_PASSWORD")
-    receiver_email = order.customer_email
+    import smtplib
+    import os
+    from email.mime.text import MIMEText
+    from dotenv import load_dotenv
 
-    if not sender_email or not sender_password:
-        return jsonify({"error": "Email credentials are missing"}), 500
+    load_dotenv()
 
-    subject = f"Order Confirmation - Order #{order.id}"
+    sender = os.getenv("SENDER_EMAIL")
+    password = os.getenv("SENDER_PASSWORD")
+    receiver = sender  # Send to self for test
+
+    msg = MIMEText("This is a simple test email from Python.")
+    msg["Subject"] = "Test Email"
+    msg["From"] = sender
+    msg["To"] = receiver
 
     try:
-
-        with current_app.app_context():
-            html = render_template('confirmation_email.html', order=order, product=product)
-
-        message = MIMEMultipart()
-        message["From"] = sender_email
-        message["To"] = receiver_email
-        message["Subject"] = str(Header(subject, "utf-8"))
-        message.attach(MIMEText(html, "html"))
-
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
             server.starttls()
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
-
-        logging.info("Email sent successfully")
-        return None
-
+            server.login(sender, password)
+            server.sendmail(sender, receiver, msg.as_string())
+            print("✅ Email sent successfully!")
     except Exception as e:
-        logging.error(f" Email sending failed: {e}")
+        print(f"❌ Failed to send email: {e}")
         return jsonify({"error": "Email failed", "details": str(e)}), 500
+
 
 
 
