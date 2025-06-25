@@ -13,7 +13,7 @@ A simplified backend system for handling customer orders using Flask. Supports u
 - 🐳 Docker-ready
 
 ## 📁 Project Structure
-\`\`\`
+<pre> ```
 app/
 ├── routes.py
 ├── models.py
@@ -27,17 +27,16 @@ config.py
 requirements.txt
 run.py
 Dockerfile
-\`\`\`
+``` </pre>
 
 ## ⚙️ Setup
 
-\`\`\`bash
+<pre> ``` bash
 git clone <https://github.com/FatimaaAlzahraa/order_processing_system>
 cd order_process_sys
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-\`\`\`
+pip install -r requirements.txt  ``` </pre> 
 
 ## 🔐 Environment (.env)
 
@@ -55,9 +54,9 @@ SENDER_PASSWORD=your_app_password ``` </pre>
 
 ## ▶️ Run App
 
-\`\`\`bash
+<pre> ``bash
 flask run
-\`\`\`
+``` </pre>
 
 
 
