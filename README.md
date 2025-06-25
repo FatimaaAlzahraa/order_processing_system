@@ -27,15 +27,12 @@ A simplified backend system for handling customer orders using Flask. Supports u
 ---
 
 ## ⚙️ Setup and Create Virtual Environment
-
-1. [🔷 Clone the repository](https://github.com/FatimaaAlzahraa/order_processing_system)
-2. Create a `.env` file.
-3. Run:
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate  
-   pip install -r requirements.txt
-
+<pre> git clone https://github.com/FatimaaAlzahraa/order_processing_system
+create .env file 
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt  
+testing API in postman  </pre> 
 
 ## 🔐 Environment (.env)
 
@@ -55,10 +52,20 @@ SENDER_PASSWORD=your_app_password </pre>
 <pre> flask run </pre>
 
 
-## 🐳 Docker
-### Build Docker Image
-<pre> <https://hub.docker.com/r/fatmaalzahra/hey-app-flask>
-docker build -t order-app .
-### Run Docker Container
-docker run -p 5000:5000 order-app 
-</pre>
+echo "## 🐳 Docker Deployment
+
+### 🔹 Docker Hub
+
+- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
+
+### 🔹 Build Docker Image
+
+\`\`\`bash
+docker build -t fatmaalzahra/hey-app-flask .
+\`\`\`
+
+### 🔹 Run Docker Container
+
+\`\`\`bash
+docker run -p 5000:5000 fatmaalzahra/hey-app-flask
+\`\`\`" >> README.md
