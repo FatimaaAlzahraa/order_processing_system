@@ -17,8 +17,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 load_dotenv()
 main = Blueprint('main', __name__)
 
-# authorization user 
-# 1- register 
 @main.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -36,17 +34,15 @@ def register():
 
     return jsonify({'message': 'User registered successfully'}), 201
 
-# 2-login
 @main.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
     if user and user.check_password(data['password']):
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=str(user.id))  # Ensure identity is string
         return jsonify({'token': token}), 200
     return jsonify({'error': 'Invalid credentials'}), 401
 
-# 3- create the order for the user 
 @main.route("/order", methods=["POST"])
 @jwt_required()
 def create_order():
@@ -59,14 +55,23 @@ def create_order():
     email = data.get("email")
 
     if not all([product_name, quantity, email]):
-        return jsonify({"error": "Missing data (product_name, quantity, or email)"}), 400
+        return jsonify({"error": "Missing required fields", "message": "product_name, quantity, and email are required"}), 400
+
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        return jsonify({"error": "Invalid quantity", "message": "Quantity must be a number"}), 400
 
     product = Product.query.filter_by(name=product_name).first()
     if not product:
-        return jsonify({"error": "Product not found"}), 404
+        return jsonify({"error": "Product not found", "message": f"Product '{product_name}' doesn't exist"}), 404
 
     if quantity > product.stock:
-        return jsonify({"error": "Insufficient stock"}), 400
+        return jsonify({
+            "error": "Insufficient stock",
+            "message": f"Only {product.stock} items available",
+            "available_stock": product.stock
+        }), 400
 
     total = product.price * quantity
 
@@ -76,7 +81,6 @@ def create_order():
             user_id=user_id,
             quantity=quantity,
             total=total,
-            #Payment Processing (Mock)
             paid=True,
             customer_email=email
         )
@@ -91,21 +95,30 @@ def create_order():
 
         return jsonify({
             "message": "Order placed successfully",
-            "order_id": order.id
+            "order_id": order.id,
+            "product_name": product.name,
+            "quantity": quantity,
+            "total": total
         }), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "Order failed", "details": str(e)}), 500
+        return jsonify({
+            "error": "Order failed", 
+            "message": str(e),
+            "details": "Please try again later"
+        }), 500
 
-# 4- send confirm email for the authorized user
 def send_confirmation_email(order, product):
     sender_email = os.getenv("SENDER_EMAIL")
     sender_password = os.getenv("SENDER_PASSWORD")
     receiver_email = order.customer_email
 
     if not sender_email or not sender_password:
-        return jsonify({"error": "Email credentials are missing"}), 500
+        return jsonify({
+            "error": "Email service unavailable",
+            "message": "Failed to send confirmation email"
+        }), 500
 
     subject = f"Order Confirmation - Order #{order.id}"
 
@@ -114,9 +127,9 @@ def send_confirmation_email(order, product):
             html = render_template('confirmation_email.html', order=order, product=product)
 
         message = MIMEMultipart()
-        message["From"] = formataddr(("Order Service", sender_email))  
-        message["To"] = formataddr(("Customer", receiver_email))       
-        message["Subject"] = subject                               
+        message["From"] = formataddr(("Order Service", sender_email))
+        message["To"] = receiver_email
+        message["Subject"] = subject
 
         message.attach(MIMEText(html, "html"))
 
@@ -125,15 +138,16 @@ def send_confirmation_email(order, product):
             server.login(sender_email, sender_password)
             server.sendmail(sender_email, receiver_email, message.as_string())
 
-        logging.info("Email sent successfully")
+        logging.info(f"Email sent to {receiver_email}")
         return None
 
     except Exception as e:
         logging.error(f"Email sending failed: {e}")
-        return jsonify({"error": "Email failed", "details": str(e)}), 500
-
-
-        
+        return jsonify({
+            "error": "Email failed",
+            "message": "Confirmation email could not be sent",
+            "details": str(e)
+        }), 500
 
 
 
