@@ -27,47 +27,67 @@ A Flask-based e-commerce backend with JWT authentication, order processing, and 
 | Testing            | unittest + Mock          |
 | Deployment         | Docker                   |
 
-## 🚀 Quick Start
+
 
 ### Prerequisites
 - Python 3.8+
 - Docker (optional)
 - Gmail account for email service
 
-### Installation
-```bash
+
+### 🔹 Clone and Install Dependencies
+
+\`\`\`bash
 git clone https://github.com/FatimaaAlzahraa/order_processing_system
 cd order_processing_system
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+venv\Scripts\activate
+\`\`\`
 
+---
 
-##  Configuration
+## 🔐 Configuration
 
-Create `.env` file:
-```ini
+Create a \`.env\` file with the following:
+
+\`\`\`ini
 SECRET_KEY=your_secret_key_here
 JWT_SECRET_KEY=your_jwt_secret_here
 SQLALCHEMY_DATABASE_URI=sqlite:///database.db
 SENDER_EMAIL=your_email@gmail.com
 SENDER_PASSWORD=your_app_password
+\`\`\`
 
+---
 
-Initialize Database
+## 🗃️ Initialize Database
+
+\`\`\`bash
 flask shell
 >>> from app import db
 >>> db.create_all()
 >>> exit()
+\`\`\`
 
+---
 
-Testing
+## 🧪 Run Tests
+
+\`\`\`bash
 python -m unittest discover -s tests
+\`\`\`
 
-Running the Application
+---
+
+## ▶️ Run the Application
+
+\`\`\`bash
 flask run
+\`\`\`
 
-echo "## 🐳 Docker Deployment
+---
+
+## 🐳 Docker Deployment
 
 ### 🔹 Docker Hub
 
