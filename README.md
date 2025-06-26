@@ -38,7 +38,7 @@ echo "## 🚀 Setup Instructions
 
 ### 🔹 Clone and Install Dependencies
 
-\`\`\`bash
+<P>
 git clone https://github.com/FatimaaAlzahraa/order_processing_system
 cd order_processing_system
 python -m venv venv
@@ -47,7 +47,7 @@ venv\Scripts\activate
 # For Mac/Linux:
 source venv/bin/activate
 pip install -r requirements.txt
-\`\`\`
+<P>
 
 ---
 
@@ -55,40 +55,40 @@ pip install -r requirements.txt
 
 Create a \`.env\` file with the following:
 
-\`\`\`ini
+<p>
 SECRET_KEY=your_secret_key_here
 JWT_SECRET_KEY=your_jwt_secret_here
 SQLALCHEMY_DATABASE_URI=sqlite:///database.db
 SENDER_EMAIL=your_email@gmail.com
 SENDER_PASSWORD=your_app_password
-\`\`\`
+<P>
 
 ---
 
 ## 🗃️ Initialize Database
 
-\`\`\`bash
+<P>
 flask shell
 >>> from app import db
 >>> db.create_all()
 >>> exit()
-\`\`\`
+<P>
 
 ---
 
 ## 🧪 Run Tests
 
-\`\`\`bash
+<P>
 python -m unittest discover -s tests
-\`\`\`
+<P>
 
 ---
 
 ## ▶️ Run the Application
 
-\`\`\`bash
+<p>
 flask run
-\`\`\`
+<P>
 
 ---
 
