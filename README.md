@@ -76,19 +76,18 @@ flask shell
 
 ---
 
-## 🧪 Run Tests
-
-<P>
+## 🧪 Run Tests routes 
+<pre>
 python -m unittest discover -s tests
-<P>
+or Test use the API Postman 
+</pre>
 
 ---
 
 ## ▶️ Run the Application
-
-<p>
+<pre>
 flask run
-<P>
+</pre>
 
 ---
 
