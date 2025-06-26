@@ -38,7 +38,6 @@ echo "## 🚀 Setup Instructions
 
 ### 🔹 Clone and Install Dependencies
 
-### 🔹 Clone and Install Dependencies
 
 <pre>
 git clone https://github.com/FatimaaAlzahraa/order_processing_system
@@ -55,27 +54,25 @@ pip install -r requirements.txt
 ---
 
 ## 🔐 Configuration
-
+<pre>
 Create a \`.env\` file with the following:
-
-<p>
 SECRET_KEY=your_secret_key_here
 JWT_SECRET_KEY=your_jwt_secret_here
 SQLALCHEMY_DATABASE_URI=sqlite:///database.db
 SENDER_EMAIL=your_email@gmail.com
 SENDER_PASSWORD=your_app_password
-<P>
+</pre>
 
 ---
 
 ## 🗃️ Initialize Database
 
-<P>
+<pre>
 flask shell
 >>> from app import db
 >>> db.create_all()
 >>> exit()
-<P>
+</pre>
 
 ---
 
