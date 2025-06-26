@@ -60,17 +60,30 @@ flask shell
 >>> db.create_all()
 >>> exit()
 
-Running the Application
-flask run
-
-🐳 Docker Deployment
-- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
-docker pull fatmaalzahra/hey-app-flask
-docker run -p 5000:5000 fatmaalzahra/hey-app-flask
-
-Build Locally
-docker build -t order-processing-system .
-docker run -p 5000:5000 order-processing-system
 
 Testing
 python -m unittest discover -s tests
+
+Running the Application
+flask run
+
+echo "## 🐳 Docker Deployment
+
+### 🔹 Docker Hub
+
+- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
+
+### 🔹 Build Docker Image
+
+\`\`\`bash
+docker build -t fatmaalzahra/hey-app-flask .
+\`\`\`
+
+### 🔹 Run Docker Container
+
+\`\`\`bash
+docker run -p 5000:5000 fatmaalzahra/hey-app-flask
+\`\`\`" >> README.md
+
+
+
