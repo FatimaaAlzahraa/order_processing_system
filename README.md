@@ -75,3 +75,37 @@ flask shell
 \`\`\`
 
 ---
+
+## 🧪 Run Tests
+
+\`\`\`bash
+python -m unittest discover -s tests
+\`\`\`
+
+---
+
+## ▶️ Run the Application
+
+\`\`\`bash
+flask run
+\`\`\`
+
+---
+
+## 🐳 Docker Deployment
+
+### 🔹 Docker Hub
+
+- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
+
+### 🔹 Build Docker Image
+
+\`\`\`bash
+docker build -t fatmaalzahra/hey-app-flask .
+\`\`\`
+
+### 🔹 Run Docker Container
+
+\`\`\`bash
+docker run -p 5000:5000 fatmaalzahra/hey-app-flask
+\`\`\`" >> README.md
