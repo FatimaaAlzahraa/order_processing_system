@@ -4,7 +4,7 @@ from app import create_app, db
 from app.models import User, Product
 from flask_jwt_extended import create_access_token
 
-# testing check routes.py 
+# ---- testing check routes.py ------
 
 class OrderTestCase(unittest.TestCase):
     def setUp(self):
