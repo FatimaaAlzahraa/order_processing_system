@@ -64,6 +64,7 @@ Running the Application
 flask run
 
 🐳 Docker Deployment
+- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
 docker pull fatmaalzahra/hey-app-flask
 docker run -p 5000:5000 fatmaalzahra/hey-app-flask
 
