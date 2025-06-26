@@ -1,71 +1,75 @@
-echo "# 🛒 Order Processing System
+# 🛒 Order Processing System
 
-A simplified backend system for handling customer orders using Flask. Supports user authentication, stock management, mock payments, email confirmations, testing, and Docker deployment.
+A Flask-based e-commerce backend with JWT authentication, order processing, and email confirmations. Ready for Docker deployment.
 
-## ✅ Features
-- 🔐 User registration/login (JWT)
-- 📦 Product stock validation
-- 💳 Mock payment simulation
-- 📧 Email confirmation with HTML template
-- ⚠️ Error handling
-- 🧪 Unit testing
-- 🧾 Logging support
-- 🐳 Docker-ready
+![Docker Image](https://img.shields.io/docker/pulls/fatmaalzahra/hey-app-flask) 
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 
+## 🌟 Features
 
+- 🔐 JWT Authentication (Register/Login)
+- 📦 Product inventory management
+- 💳 Order processing with stock validation
+- ✉️ Email confirmation system
+- 🧪 Comprehensive unit testing
+- 🐳 Docker container support
+- 📝 HTML templates for web interface
+- ⚡ REST API endpoints
 
-## 🧰 Technologies
+## 🛠️ Technologies
 
-- Python + Flask
-- Flask-JWT-Extended
-- Flask-Mail
-- SQLAlchemy
-- SQLite (for local testing)
-- Docker
-- Unittest + Mock
+| Component          | Technology               |
+|--------------------|--------------------------|
+| Framework          | Flask                    |
+| Authentication     | Flask-JWT-Extended       |
+| Database           | SQLAlchemy + SQLite      |
+| Email              | Flask-Mail + SMTP        |
+| Testing            | unittest + Mock          |
+| Deployment         | Docker                   |
 
----
+## 🚀 Quick Start
 
-## ⚙️ Setup and Create Virtual Environment
-<pre> git clone https://github.com/FatimaaAlzahraa/order_processing_system
-create .env file 
+### Prerequisites
+- Python 3.8+
+- Docker (optional)
+- Gmail account for email service
+
+### Installation
+```bash
+git clone https://github.com/FatimaaAlzahraa/order_processing_system
+cd order_processing_system
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt  
-testing API in postman  </pre> 
-
-## 🔐 Environment (.env)
-
-<pre> SECRET_KEY=your_secret_key 
-SQLALCHEMY_DATABASE_URI=sqlite:///database.db 
-MAIL_SERVER=smtp.gmail.com 
-MAIL_PORT=587 
-MAIL_USE_TLS=True 
-MAIL_USERNAME=your_email@gmail.com 
-MAIL_PASSWORD=your_app_password 
-SENDER_EMAIL=your_email@gmail.com 
-SENDER_PASSWORD=your_app_password </pre>
+pip install -r requirements.txt
 
 
-## ▶️ Run App
+##  Configuration
 
-<pre> flask run </pre>
+Create `.env` file:
+```ini
+SECRET_KEY=your_secret_key_here
+JWT_SECRET_KEY=your_jwt_secret_here
+SQLALCHEMY_DATABASE_URI=sqlite:///database.db
+SENDER_EMAIL=your_email@gmail.com
+SENDER_PASSWORD=your_app_password
 
 
-echo "## 🐳 Docker Deployment
+Initialize Database
+flask shell
+>>> from app import db
+>>> db.create_all()
+>>> exit()
 
-### 🔹 Docker Hub
+Running the Application
+flask run
 
-- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
-
-### 🔹 Build Docker Image
-
-\`\`\`bash
-docker build -t fatmaalzahra/hey-app-flask .
-\`\`\`
-
-### 🔹 Run Docker Container
-
-\`\`\`bash
+🐳 Docker Deployment
+docker pull fatmaalzahra/hey-app-flask
 docker run -p 5000:5000 fatmaalzahra/hey-app-flask
-\`\`\`" 
+
+Build Locally
+docker build -t order-processing-system .
+docker run -p 5000:5000 order-processing-system
+
+Testing
+python -m unittest discover -s tests
