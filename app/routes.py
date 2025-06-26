@@ -11,12 +11,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from email.utils import formataddr
-import logging
 
+import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 load_dotenv()
 main = Blueprint('main', __name__)
 
+#Authorization 
+# 1- register  with error handling 
 @main.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -34,6 +36,7 @@ def register():
 
     return jsonify({'message': 'User registered successfully'}), 201
 
+# 2-login with error handling 
 @main.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -43,6 +46,7 @@ def login():
         return jsonify({'token': token}), 200
     return jsonify({'error': 'Invalid credentials'}), 401
 
+# 3- order processing with mock paid 
 @main.route("/order", methods=["POST"])
 @jwt_required()
 def create_order():
@@ -61,7 +65,8 @@ def create_order():
         quantity = int(quantity)
     except ValueError:
         return jsonify({"error": "Invalid quantity", "message": "Quantity must be a number"}), 400
-
+    
+    # error handling check the product name and stock 
     product = Product.query.filter_by(name=product_name).first()
     if not product:
         return jsonify({"error": "Product not found", "message": f"Product '{product_name}' doesn't exist"}), 404
@@ -81,6 +86,7 @@ def create_order():
             user_id=user_id,
             quantity=quantity,
             total=total,
+            #integrated with a mock payment gateway
             paid=True,
             customer_email=email
         )
@@ -109,6 +115,7 @@ def create_order():
             "details": "Please try again later"
         }), 500
 
+# 4-confirm email 
 def send_confirmation_email(order, product):
     sender_email = os.getenv("SENDER_EMAIL")
     sender_password = os.getenv("SENDER_PASSWORD")
