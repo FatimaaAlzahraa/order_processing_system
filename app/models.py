@@ -26,7 +26,9 @@ class Order(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  
     total = db.Column(db.Float)
-    quantity = db.Column(db.Integer)  
-    paid = db.Column(db.Boolean, default=False)
+    quantity = db.Column(db.Integer) 
+    paid = db.Column(db.Boolean, default=False)  
+    payment_reference = db.Column(db.String(120))  
     customer_email = db.Column(db.String(120))
+
 
