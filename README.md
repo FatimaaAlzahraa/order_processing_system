@@ -31,7 +31,7 @@ A Flask-based e-commerce backend with JWT authentication, order processing, and 
 
 ### Prerequisites
 - Python 3.8+
-- Docker (optional)
+- Docker 
 - Gmail account for email service
 
 echo "## 🚀 Setup Instructions

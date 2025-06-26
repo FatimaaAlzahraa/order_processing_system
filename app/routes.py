@@ -66,7 +66,7 @@ def create_order():
     except ValueError:
         return jsonify({"error": "Invalid quantity", "message": "Quantity must be a number"}), 400
     
-    # error handling check the product name and stock 
+    # error handling check the product name and product stock 
     product = Product.query.filter_by(name=product_name).first()
     if not product:
         return jsonify({"error": "Product not found", "message": f"Product '{product_name}' doesn't exist"}), 404
@@ -95,6 +95,8 @@ def create_order():
         product.stock -= quantity
         db.session.commit()
 
+
+        # email send
         email_result = send_confirmation_email(order, product)
         if isinstance(email_result, tuple): 
             return email_result
@@ -115,7 +117,7 @@ def create_order():
             "details": "Please try again later"
         }), 500
 
-# 4-confirm email 
+# 4-confirm email setup with error handel 
 def send_confirmation_email(order, product):
     sender_email = os.getenv("SENDER_EMAIL")
     sender_password = os.getenv("SENDER_PASSWORD")
