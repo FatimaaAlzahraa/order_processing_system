@@ -18,7 +18,7 @@ load_dotenv()
 main = Blueprint('main', __name__)
 
 #Authorization 
-# 1- register  with error handling 
+# 1- register with error handling 
 @main.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
