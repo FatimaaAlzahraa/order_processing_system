@@ -34,6 +34,7 @@ A Flask-based e-commerce backend with JWT authentication, order processing, and 
 - Docker (optional)
 - Gmail account for email service
 
+echo "## 🚀 Setup Instructions
 
 ### 🔹 Clone and Install Dependencies
 
@@ -41,7 +42,11 @@ A Flask-based e-commerce backend with JWT authentication, order processing, and 
 git clone https://github.com/FatimaaAlzahraa/order_processing_system
 cd order_processing_system
 python -m venv venv
+# For Windows:
 venv\Scripts\activate
+# For Mac/Linux:
+source venv/bin/activate
+pip install -r requirements.txt
 \`\`\`
 
 ---
@@ -70,40 +75,3 @@ flask shell
 \`\`\`
 
 ---
-
-## 🧪 Run Tests
-
-\`\`\`bash
-python -m unittest discover -s tests
-\`\`\`
-
----
-
-## ▶️ Run the Application
-
-\`\`\`bash
-flask run
-\`\`\`
-
----
-
-## 🐳 Docker Deployment
-
-### 🔹 Docker Hub
-
-- 📦 [View the Image on Docker Hub](https://hub.docker.com/r/fatmaalzahra/hey-app-flask)
-
-### 🔹 Build Docker Image
-
-\`\`\`bash
-docker build -t fatmaalzahra/hey-app-flask .
-\`\`\`
-
-### 🔹 Run Docker Container
-
-\`\`\`bash
-docker run -p 5000:5000 fatmaalzahra/hey-app-flask
-\`\`\`" >> README.md
-
-
-
