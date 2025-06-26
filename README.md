@@ -38,7 +38,9 @@ echo "## 🚀 Setup Instructions
 
 ### 🔹 Clone and Install Dependencies
 
-<p>'''
+### 🔹 Clone and Install Dependencies
+
+<pre>
 git clone https://github.com/FatimaaAlzahraa/order_processing_system
 cd order_processing_system
 python -m venv venv
@@ -47,7 +49,8 @@ venv\Scripts\activate
 # For Mac/Linux:
 source venv/bin/activate
 pip install -r requirements.txt
-''' <p>
+</pre>
+
 
 ---
 
